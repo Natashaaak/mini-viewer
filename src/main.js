@@ -4,6 +4,15 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
+// Suppress console warnings for HDR value overflow
+const originalWarn = console.warn;
+console.warn = function(...args) {
+  if (args[0] && typeof args[0] === 'string' && args[0].includes('THREE.DataUtils.toHalfFloat(): Value out of range')) {
+    return; // Suppress this specific warning
+  }
+  originalWarn.apply(console, args);
+};
+
 class ThreeJSApp {
   constructor() {
     this.scene = null;
@@ -39,7 +48,7 @@ class ThreeJSApp {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.0;
+    this.renderer.toneMappingExposure = 1.0; // Restored to normal exposure
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.physicallyCorrectLights = true;
 
@@ -69,13 +78,33 @@ class ThreeJSApp {
     loadEnvironmentMap() {
     const exrLoader = new EXRLoader();
     exrLoader.load('./meadow_2_4k.exr', (hdrEquirect) => {
-      const envMap = this.pmrem.fromEquirectangular(hdrEquirect).texture;
-      this.scene.environment = envMap;
-      this.scene.background = envMap;
-      this.pmrem.dispose();
-      console.log('Environment map loaded successfully!');
+      try {
+        // Set proper mapping for the HDR texture
+        hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
+        
+        // Create environment map
+        const envMap = this.pmrem.fromEquirectangular(hdrEquirect).texture;
+        
+        // Set environment map for reflections
+        this.scene.environment = envMap;
+        
+        // Set background
+        this.scene.background = envMap;
+        
+        // Clean up
+        this.pmrem.dispose();
+        hdrEquirect.dispose();
+        
+        console.log('Environment map loaded successfully!');
+      } catch (error) {
+        console.error('Error processing environment map:', error);
+        // Fallback to a simple color background
+        this.scene.background = new THREE.Color(0x87CEEB); // Sky blue
+      }
     }, (progress) => {}, (error) => {
       console.error('Error loading environment map:', error);
+      // Fallback to a simple color background
+      this.scene.background = new THREE.Color(0x87CEEB); // Sky blue
     });
   }
 
@@ -102,9 +131,12 @@ class ThreeJSApp {
         mats.filter(Boolean).forEach((mat) => {
           const isPBR = mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial;
           if (isPBR) {
-            if (mat.envMapIntensity == null) mat.envMapIntensity = 0.5;
-            // Enable smooth shading by setting flatShading to false
+            // Set environment map intensity for proper reflections
+            mat.envMapIntensity = 0.5;
+            // Enable smooth shading
             mat.flatShading = false;
+            // Ensure proper color space handling
+            mat.needsUpdate = true;
           }
         });
       }
