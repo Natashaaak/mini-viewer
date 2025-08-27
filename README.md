@@ -1,32 +1,41 @@
-# Three.js Mini Viewer
+# Mini Cooper 3D Viewer
 
-A beautiful 3D graphics application built with Vite and Three.js, featuring a rotating cube with dynamic lighting effects.
+An interactive 3D viewer showcasing a detailed Mini Cooper model with realistic lighting and environment mapping. Built with Three.js and Vite, this application provides an immersive experience for exploring the iconic Mini Cooper design in high detail.
 
 ## Features
 
-- 🎨 Real-time 3D rendering with Three.js
-- ✨ Dynamic lighting with ambient, directional, and point lights
-- 🔄 Smooth animation with requestAnimationFrame
-- 📱 Responsive design that adapts to window resizing
-- 🚀 Optimized for GitHub Pages deployment
+- **High-Quality 3D Model**: Displays a detailed Mini Cooper model with smooth shading and realistic materials
+- **Environment Mapping**: Uses HDR environment maps (meadow_2_4k.exr) for realistic reflections and lighting
+- **Interactive Controls**: Orbit controls for smooth camera movement and model exploration
+- **Responsive Design**: Full-screen canvas that adapts to different screen sizes
+- **Optimized Performance**: Efficient rendering with proper shadow mapping and tone mapping
+- **Modern Web Technologies**: Built with Three.js and Vite for fast development and deployment
+
+## Technical Highlights
+
+- **Smooth Shading**: Applied vertex normal computation for realistic surface rendering
+- **PBR Materials**: Physically-based rendering materials for authentic appearance
+- **HDR Environment**: High dynamic range environment mapping for realistic lighting
+- **Shadow Mapping**: PCF soft shadow mapping for realistic shadows
+- **Tone Mapping**: ACES Filmic tone mapping for cinematic color reproduction
 
 ## Live Demo
 
-Visit the live demo: [Three.js Mini Viewer](https://your-username.github.io/mini-viewer/)
+The application is deployed and available for viewing at: [Mini Cooper 3D Viewer](https://natashaaak.github.io/mini-cooper)
 
-## Local Development
+## Development
 
 ### Prerequisites
 
 - Node.js (version 16 or higher)
-- npm or yarn
+- npm
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/mini-viewer.git
-cd mini-viewer
+git clone https://github.com/natashaaak/mini-cooper.git
+cd mini-cooper
 ```
 
 2. Install dependencies:
@@ -41,118 +50,71 @@ npm run dev
 
 4. Open your browser and navigate to `http://localhost:5173`
 
-### Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
-- `npm run deploy` - Build and deploy to GitHub Pages
-
-## Deployment
-
-This project is configured for deployment to GitHub Pages using the `gh-pages` package.
-
-### Quick Deployment
-
-To deploy your project to GitHub Pages, simply run:
-
-```bash
-npm run deploy
-```
-
-This command will:
-1. Build the project for production
-2. Deploy the built files to the `gh-pages` branch
-3. Make your site available at `https://your-username.github.io/mini-viewer/`
-
-### Manual Deployment
-
-If you prefer to deploy manually:
-
-1. Build the project:
-```bash
-npm run build
-```
-
-2. Deploy to GitHub Pages:
-```bash
-npx gh-pages -d dist
-```
-
-### Setup Instructions
-
-Before deploying for the first time:
-
-1. Make sure your repository is pushed to GitHub
-2. Go to your repository settings on GitHub
-3. Navigate to "Pages" in the sidebar
-4. Set the source to "Deploy from a branch"
-5. Select the `gh-pages` branch and `/ (root)` folder
-6. Click "Save"
-
-Your site will be available at `https://your-username.github.io/mini-viewer/`
-
 ## Project Structure
 
 ```
-mini-viewer/
+mini-cooper/
+├── public/
+│   ├── Mini_Cooper.glb    # 3D model file
+│   ├── meadow_2_4k.exr    # HDR environment map
+│   └── furstenstein_4k.exr # Alternative environment map
 ├── src/
-│   ├── main.js          # Main Three.js application
-│   └── style.css        # Application styles
-├── public/              # Static assets
-├── dist/                # Built files (generated)
-├── vite.config.js       # Vite configuration
-└── package.json         # Project dependencies
+│   ├── main.js           # Main Three.js application logic
+│   └── style.css         # Full-screen layout styles
+├── index.html            # HTML entry point
+├── vite.config.js        # Vite configuration
+└── package.json          # Project dependencies and scripts
 ```
+
+## Key Components
+
+### 3D Model Loading
+The application uses GLTFLoader to load the Mini Cooper model with automatic smooth shading application and material optimization.
+
+### Environment System
+Features a sophisticated environment mapping system using EXR HDR files for realistic lighting and reflections.
+
+### Rendering Pipeline
+- WebGL renderer with antialiasing
+- Physically correct lighting
+- SRGB color space
+- Optimized shadow mapping
+
+## Available Scripts
+
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build optimized production version
+- `npm run preview` - Preview production build locally
+- `npm run deploy` - Build and deploy to GitHub Pages
 
 ## Technologies Used
 
-- **Vite** - Fast build tool and development server
-- **Three.js** - 3D graphics library
-- **gh-pages** - Deployment to GitHub Pages
-- **GitHub Pages** - Static site hosting
+- **[Three.js](https://threejs.org/)** - Advanced 3D graphics library
+- **[Vite](https://vitejs.dev/)** - Fast build tool and development server
+- **[GLTFLoader](https://threejs.org/docs/#examples/en/loaders/GLTFLoader)** - GLTF/GLB model loading
+- **[EXRLoader](https://threejs.org/docs/#examples/en/loaders/EXRLoader)** - HDR environment map loading
+- **[OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls)** - Interactive camera controls
 
-## Customization
+## Performance Optimizations
 
-### Changing the 3D Scene
+- Efficient geometry processing with vertex normal computation
+- Optimized material settings for PBR rendering
+- Proper texture filtering and mipmap generation
+- Responsive design with device pixel ratio optimization
 
-Edit `src/main.js` to modify the 3D scene:
+## Browser Compatibility
 
-- Add new geometries and materials
-- Modify lighting setup
-- Change animation behavior
-- Add user interactions
-
-### Styling
-
-Edit `src/style.css` to customize the appearance:
-
-- Change colors and fonts
-- Modify UI elements
-- Add responsive design rules
-
-### Configuration
-
-Edit `vite.config.js` to adjust build settings:
-
-- Change the base path for different deployment locations
-- Modify build optimization settings
-- Add plugins or additional configuration
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test locally
-5. Submit a pull request
+This application works best in modern browsers with WebGL support:
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+MIT License - feel free to use this project for learning or commercial purposes.
 
-## Acknowledgments
+## Contributing
 
-- Built with [Three.js](https://threejs.org/)
-- Powered by [Vite](https://vitejs.dev/)
-- Deployed on [GitHub Pages](https://pages.github.com/)
+Contributions are welcome! Feel free to submit issues or pull requests for improvements to the 3D viewer or model presentation.
+

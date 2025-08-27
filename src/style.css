@@ -5,36 +5,205 @@
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  background: #1a1a1a;
-  color: white;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #000;
   overflow: hidden;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
 
 canvas {
   display: block;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
-/* Optional: Add some UI elements */
-.info {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 100;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 15px;
-  border-radius: 8px;
+.infoButton {
+  position: absolute;
+  bottom: 0;
+  margin: 18px 18px;
+  cursor: pointer;
+  width: 25px;
+  transition: all .2s ease-in-out;
+  box-shadow: 0 0 0 rgba(255, 87, 34, 0);
+  border-radius: 2em;
+  mix-blend-mode: screen;
+}
+
+.infoButton:hover {
+  transform: scale(1.2);
+}
+
+.type3 {
+  border: 1px solid #5678A5;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  background-color: rgba(51, 79, 117, 0.6);
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
+}
+
+.infoButton {
+  position: absolute;
+  bottom: 0;
+  margin: 18px 18px;
+  cursor: pointer;
+  width: 25px;
+  transition: all .2s ease-in-out;
+  box-shadow: 0 0 0 rgba(255, 87, 34, 0);
+  border-radius: 2em;
+  mix-blend-mode: screen;
+}
+
+.infoButton:hover {
+  transform: scale(1.2);
+}
+
+#collapseInfo {
+  width: 380px;
+  max-height: 350px;
+  position: absolute;
+  bottom: 50px;
+  margin: 10px 10px;
+  overflow: hidden;
+  padding-right: 40px; /* Add space for close button */
+
+  transition: all 0.5s ease-in-out;
+}
+
+#collapseInfo.collapsed {
+  width: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .infoButton {
+      width: 30px;
+      margin: 10px;
+  }
+  
+  #collapseInfo {
+      width: 90vw;
+      max-width: 350px;
+      font-size: 14px;
+  }
+  
+  .infoBox {
+      left: 10px;
+      font-size: 14px;
+  }
+  
+  .tab-content-wrapper {
+      min-height: 200px; /* Slightly smaller height on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  #collapseInfo {
+      bottom: 60px;
+      padding: 8px;
+      padding-right: 35px;
+  }
+  
+  .closeButton {
+      width: 20px;
+      height: 20px;
+      font-size: 16px;
+      top: 3px;
+      right: 5px;
+  }
+}
+
+/* Tab system for info panel */
+.info-tabs {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #5678A5;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
   font-size: 14px;
+  font-family: Arial, sans-serif;
 }
 
-.info h1 {
+.tab-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tab-button.active {
+  border-bottom-color: #5678A5;
+  font-weight: bold;
+}
+
+/* Tab content container to maintain consistent height */
+.tab-content-wrapper {
+  min-height: 280px; /* Set a consistent height for both tabs */
+  position: relative;
+}
+
+.tab-content {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 15px;
+  font-family: Arial, sans-serif;
+}
+
+.tab-content.active {
+  display: block;
+  opacity: 1;
+}
+
+.tab-content h3 {
+  margin-top: 0;
   margin-bottom: 10px;
-  color: #00ff88;
+  color: #87CEEB;
+  font-family: Arial, sans-serif;
 }
 
-.info p {
-  margin-bottom: 5px;
-  opacity: 0.8;
+.tab-content p {
+  margin: 8px 0;
+  line-height: 1.4;
+  font-family: Arial, sans-serif;
 }

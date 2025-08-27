@@ -2,16 +2,46 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/car.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Three.js Mini Viewer</title>
+    <title>Mini Cooper Viewer</title>
   </head>
   <body>
-    <div class="info">
-      <h1>Three.js Mini Viewer</h1>
-      <p>A rotating cube with dynamic lighting</p>
-      <p>Built with Vite + Three.js</p>
-    </div>
+    <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    
+    <img class="infoButton" src="/info-circle.svg" alt="info button" onclick="collapseInfo()"/>
+    <div class="type3" id="collapseInfo">
+      <button class="closeButton" onclick="collapseInfo()" title="Close">×</button>
+      <div class="info-tabs">
+          <button class="tab-button active">About</button>
+      </div>
+      
+      <div class="tab-content-wrapper">
+          <div id="about-tab" class="tab-content active">
+              <h3>Mini Paceman 2014</h3>
+              <p>Model created in Blender with textures using Principled BSFD.</p>
+              <p>Number of faces: 147 120</p>
+              
+              <h3>Camera Controls</h3>
+              <ul>
+                  <li><strong>Left click + drag:</strong> Rotate camera</li>
+                  <li><strong>Right click + drag:</strong> Pan camera</li>
+                  <li><strong>Mouse wheel:</strong> Zoom in/out</li>
+                  <li><strong>Touch (1 finger):</strong> Rotate</li>
+                  <li><strong>Touch (2 fingers):</strong> Pan & zoom</li>
+              </ul>
+          </div>
+      </div>
+  </div>
   </body>
+
+  <script>
+    function collapseInfo() {
+        const elem = document.getElementById('collapseInfo');
+        elem.classList.toggle("collapsed");
+    }
+    
+    // Tab switching function removed since there's only one tab now
+</script>
 </html>
