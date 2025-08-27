@@ -46,31 +46,51 @@ npm run dev
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
+- `npm run deploy` - Build and deploy to GitHub Pages
 
 ## Deployment
 
-This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+This project is configured for deployment to GitHub Pages using the `gh-pages` package.
+
+### Quick Deployment
+
+To deploy your project to GitHub Pages, simply run:
+
+```bash
+npm run deploy
+```
+
+This command will:
+1. Build the project for production
+2. Deploy the built files to the `gh-pages` branch
+3. Make your site available at `https://your-username.github.io/mini-viewer/`
 
 ### Manual Deployment
+
+If you prefer to deploy manually:
 
 1. Build the project:
 ```bash
 npm run build
 ```
 
-2. The built files will be in the `dist` directory
+2. Deploy to GitHub Pages:
+```bash
+npx gh-pages -d dist
+```
 
-### Automatic Deployment
+### Setup Instructions
 
-The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically builds and deploys the project to GitHub Pages when changes are pushed to the main branch.
+Before deploying for the first time:
 
-To enable automatic deployment:
-
-1. Push your code to GitHub
-2. Go to your repository settings
+1. Make sure your repository is pushed to GitHub
+2. Go to your repository settings on GitHub
 3. Navigate to "Pages" in the sidebar
-4. Select "GitHub Actions" as the source
-5. The workflow will automatically deploy your site
+4. Set the source to "Deploy from a branch"
+5. Select the `gh-pages` branch and `/ (root)` folder
+6. Click "Save"
+
+Your site will be available at `https://your-username.github.io/mini-viewer/`
 
 ## Project Structure
 
@@ -80,7 +100,7 @@ mini-viewer/
 │   ├── main.js          # Main Three.js application
 │   └── style.css        # Application styles
 ├── public/              # Static assets
-├── .github/workflows/   # GitHub Actions workflows
+├── dist/                # Built files (generated)
 ├── vite.config.js       # Vite configuration
 └── package.json         # Project dependencies
 ```
@@ -89,7 +109,7 @@ mini-viewer/
 
 - **Vite** - Fast build tool and development server
 - **Three.js** - 3D graphics library
-- **GitHub Actions** - CI/CD for automatic deployment
+- **gh-pages** - Deployment to GitHub Pages
 - **GitHub Pages** - Static site hosting
 
 ## Customization
