@@ -22,12 +22,20 @@ class ThreeJSApp {
     this.animationId = null;
     this.model = null;
     this.skySphere = null;
+    this.loadingProgress = 0;
+    this.loadingSteps = {
+      init: 10,
+      environment: 30,
+      model: 60
+    };
     
     this.init();
     this.animate();
   }
 
   init() {
+    this.updateLoading('Initializing 3D scene...', this.loadingSteps.init);
+    
     // Create scene
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
@@ -76,9 +84,13 @@ class ThreeJSApp {
   }
 
     loadEnvironmentMap() {
+    this.updateLoading('Loading environment map...', this.loadingSteps.init + 5);
+    
     const exrLoader = new EXRLoader();
     exrLoader.load('./meadow_2_4k.exr', (hdrEquirect) => {
       try {
+        this.updateLoading('Processing environment map...', this.loadingSteps.init + 15);
+        
         // Set proper mapping for the HDR texture
         hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
         
@@ -95,56 +107,112 @@ class ThreeJSApp {
         this.pmrem.dispose();
         hdrEquirect.dispose();
         
+        this.updateLoading('Environment map loaded successfully!', this.loadingSteps.environment);
         console.log('Environment map loaded successfully!');
       } catch (error) {
         console.error('Error processing environment map:', error);
         // Fallback to a simple color background
         this.scene.background = new THREE.Color(0x87CEEB); // Sky blue
+        this.updateLoading('Environment map loaded with fallback', this.loadingSteps.environment);
       }
-    }, (progress) => {}, (error) => {
+    }, (progress) => {
+      if (progress.lengthComputable) {
+        const percent = Math.round((progress.loaded / progress.total) * 20) + this.loadingSteps.init + 5;
+        this.updateLoading('Loading environment map...', percent);
+      }
+    }, (error) => {
       console.error('Error loading environment map:', error);
       // Fallback to a simple color background
       this.scene.background = new THREE.Color(0x87CEEB); // Sky blue
+      this.updateLoading('Environment map loaded with fallback', this.loadingSteps.environment);
     });
   }
 
   async loadModel(modelPath) {
+    this.updateLoading('Loading Mini Cooper model...', this.loadingSteps.environment + 10);
     console.log('Loading model from:', modelPath);
-    const loader = new GLTFLoader();
-
-    const gltf = await loader.loadAsync(modelPath);
-    console.log('Mini Cooper model loaded successfully!');
     
-    // prepare instance
-    const root = gltf.scene || gltf.scenes[0];
-    root.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
+    const loader = new GLTFLoader();
+    
+    try {
+      const gltf = await loader.loadAsync(modelPath);
+      this.updateLoading('Processing model materials...', this.loadingSteps.environment + 30);
+      console.log('Mini Cooper model loaded successfully!');
+      
+      // prepare instance
+      const root = gltf.scene || gltf.scenes[0];
+      root.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
 
-        // Apply smooth shading to geometry
-        if (child.geometry) {
-          child.geometry.computeVertexNormals();
-        }
-
-        const mats = Array.isArray(child.material) ? child.material : [child.material];
-        mats.filter(Boolean).forEach((mat) => {
-          const isPBR = mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial;
-          if (isPBR) {
-            // Set environment map intensity for proper reflections
-            mat.envMapIntensity = 0.5;
-            // Enable smooth shading
-            mat.flatShading = false;
-            // Ensure proper color space handling
-            mat.needsUpdate = true;
+          // Apply smooth shading to geometry
+          if (child.geometry) {
+            child.geometry.computeVertexNormals();
           }
-        });
-      }
-    });
 
-    this.model = root;
-    this.scene.add(this.model);
-    console.log('Model ready:', modelPath);
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          mats.filter(Boolean).forEach((mat) => {
+            const isPBR = mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial;
+            if (isPBR) {
+              // Set environment map intensity for proper reflections
+              mat.envMapIntensity = 0.5;
+              // Enable smooth shading
+              mat.flatShading = false;
+              // Ensure proper color space handling
+              mat.needsUpdate = true;
+            }
+          });
+        }
+      });
+
+      this.model = root;
+      this.scene.add(this.model);
+      
+      this.updateLoading('Model ready!', 100);
+      console.log('Model ready:', modelPath);
+      
+      // Hide loading box after a short delay
+      setTimeout(() => {
+        this.hideLoading();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error loading model:', error);
+      this.updateLoading('Error loading model', 100);
+      setTimeout(() => {
+        this.hideLoading();
+      }, 2000);
+    }
+  }
+
+  updateLoading(text, progress) {
+    const loadingText = document.getElementById('loadingText');
+    const loadingBar = document.getElementById('loadingBar');
+    const loadingDetails = document.getElementById('loadingDetails');
+    
+    if (loadingText) loadingText.textContent = text;
+    if (loadingBar) loadingBar.style.width = progress + '%';
+    
+    // Update details based on progress
+    if (loadingDetails) {
+      if (progress < 30) {
+        loadingDetails.textContent = 'Setting up 3D environment...';
+      } else if (progress < 60) {
+        loadingDetails.textContent = 'Loading high-quality environment map...';
+      } else if (progress < 90) {
+        loadingDetails.textContent = 'Processing Mini Cooper model...';
+      } else {
+        loadingDetails.textContent = 'Almost ready!';
+      }
+    }
+  }
+  
+  hideLoading() {
+    const loadingBox = document.getElementById('loadingBox');
+    if (loadingBox) {
+      loadingBox.classList.add('hidden');
+    }
   }
 
   onWindowResize() {

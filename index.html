@@ -8,6 +8,17 @@
   </head>
   <body>
     <div id="app"></div>
+    
+    <!-- Loading Box -->
+    <div id="loadingBox" class="loading-box">
+      <h2><span class="spinner"></span>Loading Mini Cooper</h2>
+      <div class="loading-text" id="loadingText">Initializing...</div>
+      <div class="loading-progress">
+        <div class="loading-bar" id="loadingBar"></div>
+      </div>
+      <div class="loading-details" id="loadingDetails">Please wait while we load the 3D model and environment...</div>
+    </div>
+    
     <script type="module" src="/src/main.js"></script>
     
     <img class="infoButton" src="/info-circle.svg" alt="info button" onclick="collapseInfo()"/>
