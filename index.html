@@ -5,11 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/mini-viewer/car.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mini Cooper Viewer</title>
-    <script type="module" crossorigin src="/mini-viewer/assets/index-BkMtD3cr.js"></script>
-    <link rel="stylesheet" crossorigin href="/mini-viewer/assets/index-BApSX4bn.css">
+    <script type="module" crossorigin src="/mini-viewer/assets/index-DgxvDtmm.js"></script>
+    <link rel="stylesheet" crossorigin href="/mini-viewer/assets/index-DjMlPQSy.css">
   </head>
   <body>
     <div id="app"></div>
+    
+    <!-- Loading Box -->
+    <div id="loadingBox" class="loading-box">
+      <h2><span class="spinner"></span>Loading Mini Cooper</h2>
+      <div class="loading-text" id="loadingText">Initializing...</div>
+      <div class="loading-progress">
+        <div class="loading-bar" id="loadingBar"></div>
+      </div>
+      <div class="loading-details" id="loadingDetails">Please wait while we load the 3D model and environment...</div>
+    </div>
+    
     
     <img class="infoButton" src="/mini-viewer/info-circle.svg" alt="info button" onclick="collapseInfo()"/>
     <div class="type3" id="collapseInfo">
